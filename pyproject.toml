@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "test-performance"
+version = "0.1.0"
+description = "FastAPI performance testing with PostgreSQL"
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+packages = [{include = "api"}]
+scripts = {run = "uvicorn api.main:app --reload"}
+
+[tool.poetry.dependencies]
+python = "^3.12"
+sqlmodel = "^0.0.14"
+asyncpg = "^0.29.0"
+pydantic = "^2.0.0"
+pydantic-settings = "^2.0.0"
+uvicorn = {extras = ["standard"], version = "^0.24.0"}
+alembic = "^1.17.2"
+fastapi = "^0.121.3"
+sqlalchemy = "^2.0.44"
+psycopg2-binary = "^2.9.11"
+greenlet = "^3.2.4"
+
+[tool.poetry.group.dev.dependencies]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
