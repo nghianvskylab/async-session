@@ -2,15 +2,15 @@ import sys
 from pathlib import Path
 
 # Add the project root to Python path
-project_root = Path(__file__).parent.parent
+project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
 from logging.config import fileConfig  # noqa: E402
 
 from alembic import context  # noqa: E402
+from api.config.settings import settings  # noqa: E402
 from sqlalchemy import URL, create_engine, pool  # noqa: E402
-
-from api.settings import settings  # noqa: E402
+from sqlalchemy.engine import Connection  # noqa: E402
 from sqlmodel import SQLModel  # noqa: E402
 
 # this is the Alembic Config object, which provides
@@ -32,7 +32,7 @@ target_metadata = SQLModel.metadata
 # ... etc.
 
 
-def get_url():
+def get_url() -> str:
     """Get database URL from settings for sync migrations."""
     # Create sync URL directly from settings (avoid importing async engine)
     return str(
@@ -73,7 +73,7 @@ def run_migrations_offline() -> None:
         context.run_migrations()
 
 
-def do_run_migrations(connection):
+def do_run_migrations(connection: Connection) -> None:
     """Run migrations with the given connection."""
     context.configure(connection=connection, target_metadata=target_metadata)
 

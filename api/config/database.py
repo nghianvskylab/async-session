@@ -5,8 +5,8 @@ from contextvars import ContextVar
 from functools import wraps
 from typing import Annotated, AsyncContextManager, ParamSpec, TypeVar
 
-from api.core.log import get_logger
-from api.settings import settings
+from api.config.log import get_logger
+from api.config.settings import settings
 from fastapi import Depends
 from sqlalchemy import URL
 from sqlalchemy.ext.asyncio import create_async_engine
@@ -30,10 +30,10 @@ logger.info(f"Database connection URL: {connection_url}")
 db_engine = create_async_engine(
     connection_url,
     echo=False,
-    pool_size=20,
-    max_overflow=10,
+    pool_size=60,
+    max_overflow=30,
     pool_pre_ping=True,
-    pool_timeout=5,
+    pool_timeout=10,
 )
 
 session_context = ContextVar[AsyncSession | None]("session", default=None)
@@ -108,4 +108,3 @@ async def bulk_session_request(
     )
 
     return results
-

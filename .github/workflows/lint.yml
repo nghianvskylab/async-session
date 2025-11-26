@@ -1,0 +1,52 @@
+name: Lint
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Cache virtual environment
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.VENV_PATH }}
+          key: ${{ runner.os }}-venv-${{ hashFiles('poetry.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-venv-
+
+      - name: Bootstrap environment
+        shell: bash
+        run: |
+          if [ ! -d "$VENV_PATH" ]; then
+            python -m venv "$VENV_PATH"
+          fi
+          source "$VENV_PATH/bin/activate"
+          python -m pip install --upgrade pip
+          pip install poetry
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          source "$VENV_PATH/bin/activate"
+          poetry install --with lint
+
+      - name: Run lint
+        shell: bash
+        run: |
+          source "$VENV_PATH/bin/activate"
+          make lint
+
